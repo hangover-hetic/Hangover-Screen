@@ -1,10 +1,12 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@types/animejs': ^3.1.4
   '@vue/cli-plugin-babel': ~4.5.17
   '@vue/cli-plugin-eslint': ~4.5.17
   '@vue/cli-service': ~4.5.17
   '@vue/compiler-sfc': ^3.2.36
+  animejs: ^3.2.1
   babel-eslint: ^10.1.0
   core-js: ^3.22.7
   eslint: ^6.8.0
@@ -19,6 +21,7 @@ specifiers:
   vue-socket.io: ^3.0.10
 
 dependencies:
+  animejs: 3.2.1
   core-js: 3.22.7
   express: 4.18.1
   express-ws: 5.0.2_express@4.18.1
@@ -30,6 +33,7 @@ dependencies:
   vue-socket.io: 3.0.10
 
 devDependencies:
+  '@types/animejs': 3.1.4
   '@vue/cli-plugin-babel': 4.5.17_f891f4a3561ee985eb492d20ca9ef75f
   '@vue/cli-plugin-eslint': 4.5.17_66e28910525a36c0b6c9f5a4d333c57c
   '@vue/cli-service': 4.5.17_664ada695da92404d5833449d4b5050b
@@ -1360,6 +1364,10 @@ packages:
     resolution: {integrity: sha512-T7VNNlYVM1SgQ+VsMYhnDkcGmWhQdL0bDyGm5TlQ3GBXnJscEClUUOKduWTmm2zCnvNLC1hc3JpuXjs/nFOc5w==}
     dev: true
 
+  /@types/animejs/3.1.4:
+    resolution: {integrity: sha512-WUjeFT2SXd6intfE6cg6eL1jk/JL88JqM2gC4WqO4iHLmbCvHUq6aoLK13lGpDWs4FtS2PHoYraJZ0dEx99Dyg==}
+    dev: true
+
   /@types/body-parser/1.19.2:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
     dependencies:
@@ -2143,6 +2151,10 @@ packages:
   /amdefine/1.0.1:
     resolution: {integrity: sha512-S2Hw0TtNkMJhIabBwIojKL9YHO5T0n5eNqWJ7Lrlel/zDbftQpxpapi8tZs3X1HWa+u+QeydGmzzNU0m09+Rcg==}
     engines: {node: '>=0.4.2'}
+    dev: false
+
+  /animejs/3.2.1:
+    resolution: {integrity: sha512-sWno3ugFryK5nhiDm/2BKeFCpZv7vzerWUcUPyAZLDhMek3+S/p418ldZJbJXo5ZUOpfm2kP2XRO4NJcULMy9A==}
     dev: false
 
   /ansi-colors/3.2.4:
