@@ -1,5 +1,5 @@
 <template>
-  <div ref="imgFlux" class="imgFluxContainer">
+  <div ref="imgFlux" class="imgFluxElement">
     <img :src="src" alt="" />
     <p v-html="number"></p>
   </div>
@@ -26,7 +26,7 @@ export default {
 </script>
 
 <style lang="scss">
-.imgFluxContainer {
+.imgFluxElement {
   width: 100%;
   height: 100%;
   display: flex;
