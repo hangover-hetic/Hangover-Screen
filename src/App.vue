@@ -2,7 +2,7 @@
   <Main :msg="message" />
   <ImgFlux :number="number" />
   <Prog />
-  <MsgOrga />
+  <MsgOrga :message="messageorga" />
 </template>
 
 <script>
@@ -27,6 +27,7 @@ export default {
       connectedStatus: "Not connected!",
       message: "No message yet!",
       number: 1,
+      messageorga: 'coucou'
     };
   },
   async mounted() {
@@ -45,6 +46,10 @@ export default {
 
     this.socket.on('message', (data) => {
       this.message = data.data;
+    })
+
+    window.addEventListener('click', () => {
+      this.messageorga = this.messageorga + this.messageorga;
     })
   },
   methods: {
