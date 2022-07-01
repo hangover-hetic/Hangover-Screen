@@ -1,10 +1,11 @@
 <template>
   <div id="msgOrga">
-    <p>{{ message }}</p>
+    <MsgElement v-for="msg in allMessages" v-bind:key="msg" :content="msg.content" />
     <transition name="newmsg">
       <div v-if="newAlert" class="newMessageAlert">
         <div class="newMessageWrapper">
-          <p>{{ message }}</p>
+          <h5>{{ message.title }}</h5>
+          <p>{{ message.content }}</p>
         </div>
       </div>
     </transition>
@@ -12,22 +13,29 @@
 </template>
 
 <script>
+import MsgElement from './msgElement/msgElement.vue'
+
 export default {
   name: "MsgOrga",
+  components: {
+    MsgElement
+  }, 
   props: {
     message: {
-      default: "Pas de message pour l'instant",
-      type: String,
+      default: () => {return {title: "Pas de message pour l'instant", content: 'Slautjkdbgsflkgqklhdgqkshbgdlk'}},
+      type: Object,
     },
   },
   data() {
     return {
       newAlert: false,
+      allMessages: [{title: 'coucou', content: 'Pas de message pour le moment'}]
     };
   },
   watch: {
-    message(newMessage, oldMessage) {
-      console.log(newMessage, oldMessage);
+    message() {
+      const newMessage = {title: this.message.title, content: this.message.content}
+      this.allMessages.push(newMessage);
       this.newAlert = true;
       setTimeout(() => (this.newAlert = false), 2000);
     },
@@ -39,6 +47,10 @@ export default {
 #msgOrga {
   grid-row-start: 2;
   grid-row-end: 4;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  overflow: hidden;
 }
 .newMessageAlert {
   position: fixed;

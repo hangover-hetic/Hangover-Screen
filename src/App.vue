@@ -27,7 +27,7 @@ export default {
       connectedStatus: "Not connected!",
       message: "No message yet!",
       number: 1,
-      messageorga: 'coucou'
+      messageorga: {title: 'coucou', content: 'saltudkjhkjsqdhklgqlskhdglkh'}
     };
   },
   async mounted() {
@@ -49,7 +49,7 @@ export default {
     })
 
     window.addEventListener('click', () => {
-      this.messageorga = this.messageorga + this.messageorga;
+      this.messageorga = {title: this.messageorga.title + this.number, content: this.messageorga.content + this.number};
     })
   },
   methods: {
