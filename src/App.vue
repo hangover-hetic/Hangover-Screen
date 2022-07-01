@@ -2,7 +2,7 @@
   <Main :msg="message" />
   <ImgFlux :number="number" />
   <Prog />
-  <MsgOrga />
+  <MsgOrga :message="messageorga" />
 </template>
 
 <script>
