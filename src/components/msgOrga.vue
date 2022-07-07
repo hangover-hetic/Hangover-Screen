@@ -45,8 +45,6 @@ export default {
 
 <style lang="scss">
 #msgOrga {
-  grid-row-start: 2;
-  grid-row-end: 4;
   display: flex;
   flex-direction: column-reverse;
   justify-content: flex-end;

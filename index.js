@@ -26,5 +26,5 @@ io.on("connection", function (socket) {
     socket.send(JSON.stringify({ message: "hello " + index }));
     socket.emit("numberChanged", { number: index });
     index++;
-  }, 10000);
+  }, 5000);
 });

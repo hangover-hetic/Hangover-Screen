@@ -1,6 +1,6 @@
 [{
     "name": "imageFlux",
-    "duration": 30000
+    "duration": 20000
 },
 {
     "name": "prog",
@@ -8,6 +8,6 @@
 },
 {
     "name": "orga",
-    "duration": 15000
+    "duration": 5000
 }
 ]
