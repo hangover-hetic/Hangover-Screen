@@ -61,9 +61,6 @@ export default {
 <style lang="scss">
 #imgFlux {
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
   background: black;
 }
 </style>

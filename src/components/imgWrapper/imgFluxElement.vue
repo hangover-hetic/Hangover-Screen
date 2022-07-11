@@ -28,7 +28,7 @@ export default {
 <style lang="scss">
 .imgFluxElement {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,7 +37,7 @@ export default {
   background-size: cover;
   img {
     max-width: 100%;
-    height: 100%;
+    max-height: 100%;
   }
   &::after {
     content: "";
