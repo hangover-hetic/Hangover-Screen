@@ -28,10 +28,8 @@ export default {
     };
   },
   watch: {
-    number(newval, oldVal) {
-      console.log(newval, oldVal);
+    number(newval) {
       this.imgs.push({ number: newval });
-      console.log(this.imgs);
     },
   },
   methods: {

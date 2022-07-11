@@ -15,6 +15,8 @@ import Prog from "./components/prog.vue";
 import MsgOrga from "./components/msgOrga.vue";
 import ImgFluxContainer from "./components/imgFluxContainer.vue";
 
+import Timer from './class/timer';
+
 import * as jsonDataIn from "./assets/data.json";
 
 import io from "socket.io-client";
@@ -81,25 +83,29 @@ export default {
         ? this.timeout.index++
         : (this.timeout.index = 0);
 
-      this.timeout.timeout = setTimeout(() => {
+      this.timeout.timeout = new Timer(() => {
         this.createBoucle();
       }, this.jsonData[index].duration);
     },
+    pauseTimeout() {
+      console.log('pause timeout');
+      this.timeout.timeout.pause();
+    },
+    playTimeout() {
+      console.log('play timeout');
+      this.timeout.timeout.resume();
+    }
   },
   async mounted() {
     this.jsonData = jsonDataIn.default;
 
-    this.timeout.timeout = setTimeout(() => {
-      this.createBoucle();
-    }, 0);
+    this.createBoucle();
 
     this.socket = await io("http://localhost:3000");
 
     this.socket.on("connected", (data) => {
       console.log(data);
     });
-
-    console.log(this.socket);
 
     this.socket.on("numberChanged", (data) => {
       console.log(data);
@@ -110,11 +116,15 @@ export default {
       this.message = data.data;
     });
 
+    var pause = false;
+
     window.addEventListener("click", () => {
       this.messageorga = {
         title: this.messageorga.title + this.number,
         content: this.messageorga.content + this.number,
       };
+
+      pause ? (this.playTimeout(), pause = false) : (this.pauseTimeout(), pause = true)
     });
   },
 };
@@ -151,7 +161,8 @@ body,
   opacity: 0;
 }
 
-.screens-enter-to, .screens-leave-from {
+.screens-enter-to,
+.screens-leave-from {
   transform: translateY(0);
   opacity: 1;
 }

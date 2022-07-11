@@ -1,6 +1,10 @@
 <template>
   <div id="imgFlux">
-    <ImgFluxElement v-for="img in imgsArray" v-bind:key="img" :number="img.number" />
+    <ImgFluxElement
+      v-for="img in imgsArray"
+      v-bind:key="img"
+      :number="img.number"
+    />
   </div>
 </template>
 
@@ -15,28 +19,29 @@ export default {
   },
   props: {
     imgsArray: {
-      type: Array
-    }
+      type: Array,
+    },
   },
   data() {
     return {
       imgAnim: true,
+      timeout: ''
     };
   },
   methods: {
     animate() {
       if (this.imgsArray.length > 1 && this.imgAnim) {
         this.imgAnim = false;
+        const images = document.querySelectorAll(".imgFluxElement");
+        const imagesToMove = Array.from(images).slice(0, 2);
         anime({
-          targets: ".imgFluxElement",
+          targets: imagesToMove,
           translateY: "-100%",
-          easing: 'easeInOutQuad',
+          easing: "easeInOutQuad",
           complete: () => {
-            this.$emit('CutImgs')
-            document
-              .querySelectorAll(".imgFluxElement")
-              .forEach((img) => (img.style.transform = ""));
-            setTimeout(() => (this.imgAnim = true), 8000);
+            this.$emit("CutImgs");
+            imagesToMove.forEach((img) => (img.style.transform = ""));
+            this.timeout = setTimeout(() => (this.imgAnim = true), 5000);
           },
         });
       }
@@ -47,6 +52,9 @@ export default {
   mounted() {
     this.animate();
   },
+  unmounted() {
+    clearTimeout(this.timeout);
+  }
 };
 </script>
 
