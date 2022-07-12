@@ -1,25 +1,32 @@
 <template>
-  <Main v-if="false" :msg="message" />
+  <Main
+    v-if="true"
+    :festName="festivalData.festName"
+    :festLogoUrl="festivalData.festLogoUrl"
+    :festSponsors="festivalData.festSponsors"
+  />
   <transition name="screens" mode="out-in" :duration="500">
-    <Prog v-if="containerState.prog" />
+    <Prog v-if="containerState.prog" :festProgs="festivalData.festProgs" />
   </transition>
-  <ImgFluxContainer :state="containerState.imageFlux" :number="number" />
+  <ImgFluxContainer :state="containerState.imageFlux" :imageInfos="imageFluxElement" />
   <transition name="screens" mode="out-in" :duration="500">
     <MsgOrga v-if="containerState.orga" :message="messageorga" />
   </transition>
 </template>
 
 <script>
+import { NativeEventSource, EventSourcePolyfill } from "event-source-polyfill";
+const EventSource = NativeEventSource || EventSourcePolyfill;
+
 import Main from "./components/main.vue";
 import Prog from "./components/prog.vue";
 import MsgOrga from "./components/msgOrga.vue";
 import ImgFluxContainer from "./components/imgFluxContainer.vue";
 
-import Timer from './class/timer';
+import Timer from "./class/timer";
 
 import * as jsonDataIn from "./assets/data.json";
 
-import io from "socket.io-client";
 
 export default {
   name: "App",
@@ -31,10 +38,8 @@ export default {
   },
   data() {
     return {
-      socket: {},
-      connectedStatus: "Not connected!",
       message: "No message yet!",
-      number: 1,
+      imageFluxElement: Object,
       messageorga: { title: "coucou", content: "saltudkjhkjsqdhklgqlskhdglkh" },
       jsonData: [],
       containerState: {
@@ -46,6 +51,13 @@ export default {
         index: 0,
         timeout: "",
       },
+      festivalData: {
+        festName: "default",
+        festLogoUrl: "default",
+        festSponsors: [{ name: "default" }],
+        festProgs: [{ name: "default" }],
+      },
+      mercureToken: ''
     };
   },
   methods: {
@@ -88,33 +100,65 @@ export default {
       }, this.jsonData[index].duration);
     },
     pauseTimeout() {
-      console.log('pause timeout');
+      console.log("pause timeout");
       this.timeout.timeout.pause();
     },
     playTimeout() {
-      console.log('play timeout');
+      console.log("play timeout");
       this.timeout.timeout.resume();
-    }
+    },
+    mercureSubscribe(urlTopic) {
+      const url = new URL(
+        "https://hangover-hub.timotheedurand.fr/.well-known/mercure"
+      );
+      url.searchParams.append("topic", urlTopic, {
+        headers: {
+          Accept: "text/event-stream",
+          Authorization: "Bearer " + this.mercureToken,
+        },
+      });
+
+      const eventSource = new EventSource(url);
+
+      eventSource.onmessage = (e) => {
+        var post = JSON.parse(e.data);
+        console.log('[mercure] : ', post);
+
+        //this.arr.push(this.post);
+      };
+    },
   },
   async mounted() {
     this.jsonData = jsonDataIn.default;
 
     this.createBoucle();
 
-    this.socket = await io("http://localhost:3000");
+    const url = new URL(document.location.href);
+    const urlParams = new URLSearchParams(url.search);
 
-    this.socket.on("connected", (data) => {
-      console.log(data);
-    });
+    const token = urlParams.get("token");
 
-    this.socket.on("numberChanged", (data) => {
-      console.log(data);
-      this.number = data.number;
-    });
+    await fetch("https://hangover.timotheedurand.fr/screen/" + token, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then(
+        (data) => (
+          (this.festivalData = {
+            festName: data.screen.festival.name,
+            festLogoUrl: data.screen.festival.logo.contentUrl,
+            festSponsors: data.screen.festival.sponsors,
+            festProgs: data.screen.festival.shows,
+          }),
+          this.mercureToken = data.mercureToken,
+          this.mercureSubscribe(data.screen.festival.mercureFeedTopics)
+        )
+      );
 
-    this.socket.on("message", (data) => {
-      this.message = data.data;
-    });
+    console.log(this.festivalData);
 
     var pause = false;
 
@@ -124,7 +168,9 @@ export default {
         content: this.messageorga.content + this.number,
       };
 
-      pause ? (this.playTimeout(), pause = false) : (this.pauseTimeout(), pause = true)
+      pause
+        ? (this.playTimeout(), (pause = false))
+        : (this.pauseTimeout(), (pause = true));
     });
   },
 };

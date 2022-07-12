@@ -17,19 +17,19 @@ export default {
       default: false,
       type: Boolean,
     },
-    number: {
-      type: Number,
-      default: 5,
+    imageInfos: {
+      type: Object,
+      default: {url: '', text: ''},
     },
   },
   data() {
     return {
-      imgs: [{ number: 0 }],
+      imgs: [{ url: '' }],
     };
   },
   watch: {
     number(newval) {
-      this.imgs.push({ number: newval });
+      this.imgs.push(newval);
     },
   },
   methods: {

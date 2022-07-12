@@ -1,7 +1,7 @@
 <template>
   <div class="progElem">
     <div class="img-wrapper">
-      <img :src="src" alt="" />
+      <img v-if="img" :src="baseImgUrl + img" alt="" />
     </div>
     <div class="infos-wrappe">
       <p>{{ name }}</p>
@@ -14,21 +14,23 @@
 </template>
 
 <script>
+import imgUrl from "@/data/data"
 import dayjs from "dayjs";
 
 export default {
   name: "ProgElem",
   data: () => {
     return {
-      src: "https://images.pexels.com/photos/2147029/pexels-photo-2147029.jpeg",
       HourInDate: "",
       HourLeftDate: "",
       startTimeHour: "",
       endTimeHour: "",
+      baseImgUrl: imgUrl
     };
   },
   props: {
     name: String,
+    img: String,
     startTime: String,
     endTime: String,
     hourIn: Number,
