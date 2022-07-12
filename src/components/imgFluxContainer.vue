@@ -17,18 +17,16 @@ export default {
       default: false,
       type: Boolean,
     },
-    imageInfos: {
-      type: Object,
-      default: {url: '', text: ''},
-    },
+    imageInfos: Object
   },
   data() {
     return {
-      imgs: [{ url: '' }],
+      imgs: [],
     };
   },
   watch: {
-    number(newval) {
+    imageInfos(newval) {
+      console.log('[mercure components]', newval)
       this.imgs.push(newval);
     },
   },

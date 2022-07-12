@@ -8,13 +8,17 @@
   <transition name="screens" mode="out-in" :duration="500">
     <Prog v-if="containerState.prog" :festProgs="festivalData.festProgs" />
   </transition>
-  <ImgFluxContainer :state="containerState.imageFlux" :imageInfos="imageFluxElement" />
+  <ImgFluxContainer
+    :state="containerState.imageFlux"
+    :imageInfos="imageFluxElement"
+  />
   <transition name="screens" mode="out-in" :duration="500">
-    <MsgOrga v-if="containerState.orga" :message="messageorga" />
+    <MsgOrga v-if="containerState.orga" />
   </transition>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from "vue";
 import { NativeEventSource, EventSourcePolyfill } from "event-source-polyfill";
 const EventSource = NativeEventSource || EventSourcePolyfill;
 
@@ -25,10 +29,7 @@ import ImgFluxContainer from "./components/imgFluxContainer.vue";
 
 import Timer from "./class/timer";
 
-import * as jsonDataIn from "./assets/data.json";
-
-
-export default {
+export default defineComponent({
   name: "App",
   components: {
     Main,
@@ -40,16 +41,14 @@ export default {
     return {
       message: "No message yet!",
       imageFluxElement: Object,
-      messageorga: { title: "coucou", content: "saltudkjhkjsqdhklgqlskhdglkh" },
       jsonData: [],
       containerState: {
         imageFlux: false,
         prog: false,
-        orga: false,
+        orga: true,
       },
       timeout: {
-        index: 0,
-        timeout: "",
+        timeout: {} as Timer,
       },
       festivalData: {
         festName: "default",
@@ -57,47 +56,14 @@ export default {
         festSponsors: [{ name: "default" }],
         festProgs: [{ name: "default" }],
       },
-      mercureToken: ''
+      mercureToken: "",
     };
   },
   methods: {
     createBoucle() {
-      const index = this.timeout.index;
-
-      const name = this.jsonData[index].name;
-
-      console.log(name, index);
-
-      switch (name) {
-        case "imageFlux":
-          this.containerState.imageFlux = true;
-          this.containerState.prog = false;
-          this.containerState.orga = false;
-          break;
-        case "prog":
-          this.containerState.imageFlux = false;
-          this.containerState.prog = true;
-          this.containerState.orga = false;
-          break;
-        case "orga":
-          this.containerState.imageFlux = false;
-          this.containerState.prog = false;
-          this.containerState.orga = true;
-          break;
-        default:
-          console.log("problème switch" + name);
-          break;
-      }
-
-      console.log(this.jsonData.length);
-
-      index < this.jsonData.length - 1
-        ? this.timeout.index++
-        : (this.timeout.index = 0);
-
       this.timeout.timeout = new Timer(() => {
         this.createBoucle();
-      }, this.jsonData[index].duration);
+      }, 3000);
     },
     pauseTimeout() {
       console.log("pause timeout");
@@ -107,10 +73,13 @@ export default {
       console.log("play timeout");
       this.timeout.timeout.resume();
     },
-    mercureSubscribe(urlTopic) {
+    mercureSubscribe(urlTopic: String) {
       const url = new URL(
         "https://hangover-hub.timotheedurand.fr/.well-known/mercure"
       );
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       url.searchParams.append("topic", urlTopic, {
         headers: {
           Accept: "text/event-stream",
@@ -118,19 +87,18 @@ export default {
         },
       });
 
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const eventSource = new EventSource(url);
 
       eventSource.onmessage = (e) => {
         var post = JSON.parse(e.data);
-        console.log('[mercure] : ', post);
-
-        //this.arr.push(this.post);
+        console.log("[mercure] : ", post);
+        this.imageFluxElement = post;
       };
     },
   },
   async mounted() {
-    this.jsonData = jsonDataIn.default;
-
     this.createBoucle();
 
     const url = new URL(document.location.href);
@@ -153,7 +121,7 @@ export default {
             festSponsors: data.screen.festival.sponsors,
             festProgs: data.screen.festival.shows,
           }),
-          this.mercureToken = data.mercureToken,
+          (this.mercureToken = data.mercureToken),
           this.mercureSubscribe(data.screen.festival.mercureFeedTopics)
         )
       );
@@ -163,17 +131,12 @@ export default {
     var pause = false;
 
     window.addEventListener("click", () => {
-      this.messageorga = {
-        title: this.messageorga.title + this.number,
-        content: this.messageorga.content + this.number,
-      };
-
       pause
         ? (this.playTimeout(), (pause = false))
         : (this.pauseTimeout(), (pause = true));
     });
   },
-};
+});
 </script>
 
 <style lang="scss">

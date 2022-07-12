@@ -3,7 +3,9 @@
     <ImgFluxElement
       v-for="img in imgsArray"
       v-bind:key="img"
-      :number="img.number"
+      :url="img.media.contentUrl"
+      :text="img.message"
+      :date="img.createdAt"
     />
   </div>
 </template>

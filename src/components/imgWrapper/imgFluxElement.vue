@@ -1,26 +1,27 @@
 <template>
   <div ref="imgFlux" class="imgFluxElement">
-    <img :src="src" alt="" />
-    <p v-html="number"></p>
+    <img :src="baseImageUrl + url" alt="" />
+    <p v-html="text"></p>
   </div>
 </template>
 
 <script>
+import imgUrl from '@/data/data';
+
 export default {
   name: "ImgFluxElement",
   data: () => {
     return {
-      src: "https://images.pexels.com/photos/2147029/pexels-photo-2147029.jpeg",
+      baseImageUrl: imgUrl
     };
   },
   props: {
-    number: {
-      type: Number,
-      default: 5,
-    },
+    url: String,
+    text: String,
+    date: String
   },
   mounted() {
-    this.$refs.imgFlux.style.backgroundImage = "url(" + this.src + ")";
+    this.$refs.imgFlux.style.backgroundImage = "url(" + this.baseImageUrl + this.url + ")";
   },
 };
 </script>
