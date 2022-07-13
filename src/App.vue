@@ -27,7 +27,7 @@ import Prog from "./components/prog.vue";
 import MsgOrga from "./components/msgOrga.vue";
 import ImgFluxContainer from "./components/imgFluxContainer.vue";
 
-import Timer from "./class/timer";
+import { timer } from "./class/boucle";
 
 export default defineComponent({
   name: "App",
@@ -48,7 +48,7 @@ export default defineComponent({
         orga: true,
       },
       timeout: {
-        timeout: {} as Timer,
+        timeout: {} as timer.Boucle,
       },
       festivalData: {
         festName: "default",
@@ -61,13 +61,16 @@ export default defineComponent({
   },
   methods: {
     createBoucle() {
-      this.timeout.timeout = new Timer(() => {
-        this.createBoucle();
-      }, 3000);
+      this.timeout.timeout = new timer.Boucle();
+
+      document.addEventListener("changePage", (event) => {
+        // @ts-ignore
+        console.log("[custom event]", event.detail);
+      });
     },
     pauseTimeout() {
       console.log("pause timeout");
-      this.timeout.timeout.pause();
+      this.timeout.timeout.stopTimer();
     },
     playTimeout() {
       console.log("play timeout");
@@ -94,6 +97,7 @@ export default defineComponent({
       eventSource.onmessage = (e) => {
         var post = JSON.parse(e.data);
         console.log("[mercure] : ", post);
+        this.timeout.timeout.changeProps("flux", true);
         this.imageFluxElement = post;
       };
     },
@@ -115,6 +119,12 @@ export default defineComponent({
       .then((response) => response.json())
       .then(
         (data) => (
+          data.screen.festival.shows
+            ? this.timeout.timeout.changeProps("prog", true)
+            : "",
+          data.screen.festival.gallery.length > 1
+            ? this.timeout.timeout.changeProps("orga", true)
+            : "",
           (this.festivalData = {
             festName: data.screen.festival.name,
             festLogoUrl: data.screen.festival.logo.contentUrl,

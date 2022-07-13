@@ -26,7 +26,6 @@ export default {
   },
   watch: {
     imageInfos(newval) {
-      console.log('[mercure components]', newval)
       this.imgs.push(newval);
     },
   },
