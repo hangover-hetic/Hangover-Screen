@@ -26,16 +26,13 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3.3.0
         with:
-          node-version: 16
-           
-      - name: Install pnpm
-        run: npm i -G pnpm
+          node-version: 14
       
       - name: Install dependencies
-        run: pnpm ci
+        run: npm ci
       
       - name: Build vue app
-        run: pnpm run build
+        run: npm run build
 
       - name: 🔑 Install SSH Key
         run: |
