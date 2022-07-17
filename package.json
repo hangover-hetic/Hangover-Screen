@@ -1,0 +1,61 @@
+{
+  "name": "hangover-screen",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "animejs": "^3.2.1",
+    "core-js": "^3.22.7",
+    "dayjs": "^1.11.3",
+    "event-source-polyfill": "^1.0.26",
+    "express": "^4.18.1",
+    "express-ws": "^5.0.2",
+    "node-sass": "^5.0.0",
+    "sass-loader": "^10.2.1",
+    "socket.io": "^4.5.1",
+    "socket.io-client": "^4.5.1",
+    "vue": "^3.2.36",
+    "vue-class-component": "^8.0.0-0",
+    "vue-socket.io": "^3.0.10"
+  },
+  "devDependencies": {
+    "@types/animejs": "^3.1.4",
+    "@types/event-source-polyfill": "^1.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.18.0",
+    "@typescript-eslint/parser": "^4.18.0",
+    "@vue/cli-plugin-babel": "~4.5.17",
+    "@vue/cli-plugin-eslint": "~4.5.17",
+    "@vue/cli-plugin-typescript": "~4.5.15",
+    "@vue/cli-service": "~4.5.17",
+    "@vue/compiler-sfc": "^3.2.36",
+    "@vue/eslint-config-typescript": "^7.0.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-vue": "^7.20.0",
+    "typescript": "~4.1.5"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended",
+      "@vue/typescript"
+    ],
+    "parserOptions": {
+      "parser": "@typescript-eslint/parser"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
