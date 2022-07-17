@@ -2,20 +2,24 @@
   <div ref="imgFlux" class="imgFluxElement">
     <img :src="baseImageUrl + url" alt="" />
     <div class="infos-img">
-      <p v-html="user.firstName"></p>
-      <p v-html="user.lastName"></p>
+      <div class="name-container">
+        <p v-html="user.firstName"></p>
+        <p v-html="user.lastName"></p>
+      </div>
       <p v-if="text" v-html="text"></p>
       <p>Il y a {{ this.getDateInForm(this.date) }} minutes</p>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import imgUrl from "@/data/data";
 
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
   name: "ImgFluxElement",
   data: () => {
     return {
@@ -29,15 +33,15 @@ export default {
     user: Object,
   },
   methods: {
-    getDateInForm(date) {
+    getDateInForm(date: string) {
       return dayjs(date).diff(dayjs(), "minute");
-    }
+    },
   },
   mounted() {
-    this.$refs.imgFlux.style.backgroundImage =
+    (this.$refs.imgFlux as HTMLElement).style.backgroundImage =
       "url(" + this.baseImageUrl + this.url + ")";
   },
-};
+});
 </script>
 
 <style lang="scss">
@@ -53,6 +57,19 @@ export default {
   img {
     max-width: 100%;
     max-height: 100%;
+  }
+  .infos-img{
+    position: absolute;
+    left: 0;
+    bottom: 5%;
+    background: rgba($color: #000000, $alpha: 0.8);
+    border-radius: 0 10px 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    .name-container{
+      display: flex;
+    }
   }
   &::after {
     content: "";

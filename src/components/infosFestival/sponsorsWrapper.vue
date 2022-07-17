@@ -35,9 +35,7 @@ export default defineComponent({
     getLargestComponent(list: NodeListOf<Element>) {
       var largestWidth = 0;
       var listElement = Array.from(list);
-      console.log(listElement, list);
       listElement.forEach((element) => {
-        console.log(element, element.clientWidth, largestWidth);
         element.clientWidth > largestWidth
           ? (largestWidth = element.clientWidth)
           : "";
@@ -82,8 +80,6 @@ export default defineComponent({
         },
         "+=2000"
       );
-
-      console.log(timeline);
 
       timeline.play();
     },

@@ -9,21 +9,22 @@
   </transition>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from "vue";
 import anime from "animejs";
 
-export default {
+export default defineComponent({
   name: "CustomTransition",
   methods: {
-    onBeforeEnter(el) {
-      el.style.opacity = 0;
-      el.querySelectorAll(".transitionElement>.div").forEach((element) => {
+    onBeforeEnter(el: HTMLElement) {
+      el.style.opacity = "0";
+      el.querySelectorAll(".transitionElement>.div").forEach((element: any) => {
         element.style.height = "100%";
       });
     },
-    onEnter(el) {
+    onEnter(el: HTMLElement) {
       setTimeout(() => {
-        el.style.opacity = 1;
+        el.style.opacity = '1';
         anime({
           targets: el.querySelectorAll(".transitionElement>.div"),
           height: "0%",
@@ -33,7 +34,7 @@ export default {
         });
       }, 800);
     },
-    onLeave(el) {
+    onLeave(el: HTMLElement) {
       anime({
         targets: el.querySelectorAll(".transitionElement>.div"),
         height: "100%",
@@ -43,7 +44,7 @@ export default {
       });
     },
   },
-};
+});
 </script>
 
 <style lang="scss"></style>

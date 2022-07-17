@@ -1,4 +1,5 @@
 <template>
+  <TokenError v-if="tokenError" />
   <Overlay
     v-if="true"
     :festName="festivalData.festName"
@@ -40,6 +41,7 @@ import Prog from "./components/progWrapper/prog.vue";
 import Gallery from "./components/galleryWrapper/gallery.vue";
 import ImgFluxContainer from "./components/imgWrapper/imgFluxContainer.vue";
 import WaitingScreen from "./components/waitingscreen.vue";
+import TokenError from "./components/TokenError.vue";
 
 import CustomTransition from "./components/transitions/transitions.vue";
 
@@ -54,6 +56,7 @@ export default defineComponent({
     ImgFluxContainer,
     WaitingScreen,
     CustomTransition,
+    TokenError,
   },
   data() {
     return {
@@ -73,6 +76,7 @@ export default defineComponent({
         festGallery: [],
       },
       mercureToken: "",
+      tokenError: false,
     };
   },
   methods: {
@@ -84,17 +88,14 @@ export default defineComponent({
       });
     },
     noMoreFlux() {
-      console.log("a pu de flux");
       if (this.timeout.timeout.noMoreFlux) {
         this.timeout.timeout.noMoreFlux();
       }
     },
     pauseTimeout() {
-      console.log("pause timeout");
       this.timeout.timeout.stopTimer();
     },
     playTimeout() {
-      console.log("play timeout");
       this.timeout.timeout.resume();
     },
     mercureSubscribe(urlTopic: String) {
@@ -117,10 +118,14 @@ export default defineComponent({
 
       eventSource.onmessage = (e) => {
         var post = JSON.parse(e.data);
-        console.log("[mercure] : ", post);
         this.timeout.timeout.newFlux();
         this.imageFluxElement = post;
       };
+    },
+    setTimeWaitingScreen() {
+      if(this.festivalData.festProgs.length > 1 && this.festivalData.festGallery.length > 1) {
+        this.timeout.timeout.changeProps("waiting", true, 10000);
+      }
     },
   },
   async mounted() {
@@ -137,10 +142,14 @@ export default defineComponent({
         "Content-Type": "application/json",
       },
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Mauvais Token");
+      })
       .then(
         (data) => (
-          console.log(data),
           data.screen.festival.shows
             ? this.timeout.timeout.changeProps("prog", true)
             : "",
@@ -151,6 +160,7 @@ export default defineComponent({
                 4500 * data.screen.festival.gallery.length
               )
             : "",
+          (document.title = "Hangover - " + data.screen.festival.name),
           (this.festivalData = {
             festName: data.screen.festival.name,
             festLogoUrl: data.screen.festival.logo.contentUrl,
@@ -163,19 +173,13 @@ export default defineComponent({
             festGallery: data.screen.festival.gallery,
           }),
           (this.mercureToken = data.mercureToken),
-          this.mercureSubscribe(data.screen.festival.mercureFeedTopics)
+          this.mercureSubscribe(data.screen.festival.mercureFeedTopics),
+          this.setTimeWaitingScreen()
         )
-      );
-
-    console.log(this.festivalData);
-
-    var pause = false;
-
-    window.addEventListener("click", () => {
-      pause
-        ? (this.playTimeout(), (pause = false))
-        : (this.pauseTimeout(), (pause = true));
-    });
+      )
+      .catch(() => {
+        this.tokenError = true;
+      });
   },
 });
 </script>

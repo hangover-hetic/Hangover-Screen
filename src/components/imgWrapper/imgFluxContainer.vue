@@ -4,15 +4,18 @@
       v-if="state === 'flux'"
       :imgsArray="imgs"
       @CutImgs="dropFirstImg"
+      @noMoreFlux="this.$emit('noMoreFlux')"
     />
   </CustomTransition>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from "vue";
+
 import ImgFlux from "./imgFlux.vue";
 import CustomTransition from "@/components/transitions/transitions.vue";
 
-export default {
+export default defineComponent({
   name: "ImgFluxContainer",
   components: {
     ImgFlux,
@@ -27,29 +30,21 @@ export default {
   },
   data() {
     return {
-      imgs: [],
+      imgs: [] as Array<Object>,
     };
   },
   watch: {
-    imageInfos(newval) {
+    imageInfos(newval: Object) {
       this.imgs.push(newval);
     },
-  },
-  mounted() {
-    console.log(this.imgs.length);
-    if (this.imgs.length < 2) {
-      console.log(this.imgs.length);
-      this.$emit("noMoreFlux");
-    }
   },
   methods: {
     dropFirstImg() {
       this.imgs = this.imgs.slice(1);
       if (this.imgs.length < 2) {
-        console.log(this.imgs.length);
         this.$emit("noMoreFlux");
       }
     },
   },
-};
+});
 </script>
