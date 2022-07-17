@@ -28,6 +28,9 @@ jobs:
         with:
           node-version: 16
           cache: 'pnpm'
+          
+      - name: Install pnpm
+        run: npm i -G pnpm
       
       - name: Install dependencies
         run: pnpm ci
