@@ -1,23 +1,27 @@
 <template>
   <div id="imgFlux">
+    <TransitionElem />
     <ImgFluxElement
       v-for="img in imgsArray"
       v-bind:key="img"
       :url="img.media.contentUrl"
       :text="img.message"
       :date="img.createdAt"
+      :user="img.relatedUser"
     />
   </div>
 </template>
 
 <script>
 import ImgFluxElement from "@/components/imgWrapper/imgFluxElement.vue";
+import TransitionElem from "@/components/transitions/transitionsElem.vue";
 import anime from "animejs";
 
 export default {
   name: "ImgFlux",
   components: {
     ImgFluxElement,
+    TransitionElem,
   },
   props: {
     imgsArray: {
@@ -27,7 +31,6 @@ export default {
   data() {
     return {
       imgAnim: true,
-      timeout: ''
     };
   },
   methods: {
@@ -40,10 +43,12 @@ export default {
           targets: imagesToMove,
           translateY: "-100%",
           easing: "easeInOutQuad",
+          delay: 5000,
+          duration: 300,
           complete: () => {
             this.$emit("CutImgs");
             imagesToMove.forEach((img) => (img.style.transform = ""));
-            this.timeout = setTimeout(() => (this.imgAnim = true), 5000);
+            this.imgAnim = true;
           },
         });
       }
@@ -54,9 +59,6 @@ export default {
   mounted() {
     this.animate();
   },
-  unmounted() {
-    clearTimeout(this.timeout);
-  }
 };
 </script>
 

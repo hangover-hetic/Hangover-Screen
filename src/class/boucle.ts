@@ -10,13 +10,14 @@ export module timer {
   export class Boucle {
     event: CustomEvent;
     listPages: Array<page> = [
-      { name: "flux", status: false, baseTime: 10000 },
-      { name: "prog", status: false, baseTime: 8000 },
+      { name: "flux", status: false, baseTime: 30000 },
+      { name: "prog", status: false, baseTime: 15000 },
       { name: "orga", status: false, baseTime: 10000 },
-      { name: "waiting", status: true, baseTime: 5000 },
+      { name: "waiting", status: true, baseTime: 20000 },
     ];
     index: any;
     timer: Timer;
+    oldIndex: number;
 
     constructor() {
       this.event = new CustomEvent("changePage", {
@@ -25,6 +26,7 @@ export module timer {
         cancelable: true,
       });
 
+      this.oldIndex = 0;
       this.index = this.listPages.findIndex((elem) => elem.status === true);
       this.timer = new Timer(this.boucle, 2000);
     }
@@ -38,6 +40,7 @@ export module timer {
     };
 
     private boucle = () => {
+      this.oldIndex = this.index;
       const index = this.index;
       const page = this.listPages[index];
 
@@ -90,5 +93,20 @@ export module timer {
     getEvent = () => {
       return this.event;
     };
+
+    noMoreFlux = () => {
+      console.log('coucou nomoreflux');
+      this.stopTimer();
+      this.timer = new Timer(this.boucle, 5000);
+      this.listPages[0].status = false;
+    }
+
+    newFlux = () => {
+      console.log(this.oldIndex);
+      if(this.oldIndex === 0){
+        this.timer.addTime(10000);
+      }
+      this.listPages[0].status = true;
+    }
   }
 }

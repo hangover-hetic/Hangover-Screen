@@ -3,20 +3,23 @@ class Timer {
   start: number;
   remaining;
   callback;
+  numberAddTime: number;
 
   constructor(callback: TimerHandler, delay: number) {
     this.remaining = delay;
     this.callback = callback;
 
+    this.numberAddTime = 0;
+
     this.start = Date.now();
     this.timerId = window.setTimeout(this.callback, this.remaining);
   }
 
-  setRemaining =  (delay: any) => {
+  setRemaining = (delay: any) => {
     this.remaining = delay;
   };
 
-  setCallback =  (callback: any) => {
+  setCallback = (callback: any) => {
     this.callback = callback;
   };
 
@@ -35,7 +38,7 @@ class Timer {
     this.timerId = window.setTimeout(this.callback, this.remaining);
   };
 
-  restart =  (callback: void, delay: any) => {
+  restart = (callback: void, delay: any) => {
     this.setRemaining(delay);
     this.setCallback(callback);
 
@@ -44,6 +47,16 @@ class Timer {
     this.start = Date.now();
     this.timerId = window.setTimeout(this.callback, this.remaining);
   };
+
+  addTime = (time: number) => {
+    if (this.numberAddTime > 4) {
+      this.pause();
+
+      this.start = Date.now();
+      this.timerId = window.setTimeout(this.callback, this.remaining + time)
+    }
+    this.numberAddTime++;
+  }
 }
 
 export default Timer;

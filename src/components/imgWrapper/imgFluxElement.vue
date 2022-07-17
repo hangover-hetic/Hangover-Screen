@@ -1,27 +1,41 @@
 <template>
   <div ref="imgFlux" class="imgFluxElement">
     <img :src="baseImageUrl + url" alt="" />
-    <p v-html="text"></p>
+    <div class="infos-img">
+      <p v-html="user.firstName"></p>
+      <p v-html="user.lastName"></p>
+      <p v-if="text" v-html="text"></p>
+      <p>Il y a {{ this.getDateInForm(this.date) }} minutes</p>
+    </div>
   </div>
 </template>
 
 <script>
-import imgUrl from '@/data/data';
+import imgUrl from "@/data/data";
+
+import dayjs from 'dayjs';
 
 export default {
   name: "ImgFluxElement",
   data: () => {
     return {
-      baseImageUrl: imgUrl
+      baseImageUrl: imgUrl,
     };
   },
   props: {
     url: String,
     text: String,
-    date: String
+    date: String,
+    user: Object,
+  },
+  methods: {
+    getDateInForm(date) {
+      return dayjs(date).diff(dayjs(), "minute");
+    }
   },
   mounted() {
-    this.$refs.imgFlux.style.backgroundImage = "url(" + this.baseImageUrl + this.url + ")";
+    this.$refs.imgFlux.style.backgroundImage =
+      "url(" + this.baseImageUrl + this.url + ")";
   },
 };
 </script>
