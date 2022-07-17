@@ -52,6 +52,8 @@ class Timer {
     if (this.numberAddTime > 4) {
       this.pause();
 
+      console.log(this.remaining, time)
+
       this.start = Date.now();
       this.timerId = window.setTimeout(this.callback, this.remaining + time)
     }

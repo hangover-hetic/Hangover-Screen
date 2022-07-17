@@ -7,13 +7,15 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import TransitionElem from "@/components/transitions/transitionsElem.vue";
 import GalleryElement from "./galleryElement.vue";
 
 import anime from "animejs";
 
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
   name: "Galery",
   components: {
     TransitionElem,
@@ -26,19 +28,18 @@ export default {
     var timeline = anime.timeline({
       easing: "easeOutExpo",
       duration: 1500,
-      loop: true,
     });
 
-    for (var i = 0; i < this.gallery.length; i++) {
+    for (var i = 0; i < this.gallery!.length; i++) {
       timeline.add({
-        targets: this.$refs.galleryWrapper,
+        targets: this.$refs.galleryWrapper as HTMLCollection,
         translateX: - 100 * i + "vw",
       }, '+=3000');
     }
 
     timeline.play();
   },
-};
+});
 </script>
 
 <style lang="scss">

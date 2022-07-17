@@ -42,9 +42,6 @@ export module timer {
     private boucle = () => {
       this.oldIndex = this.index;
       const index = this.index;
-      const page = this.listPages[index];
-
-      console.log(page.name, index, page.baseTime, page.status);
 
       this.incrementIndex();
       while (this.listPages[this.index].status !== true) {
@@ -95,17 +92,15 @@ export module timer {
     };
 
     noMoreFlux = () => {
-      console.log('coucou nomoreflux');
       this.stopTimer();
-      this.timer = new Timer(this.boucle, 5000);
+      this.timer = new Timer(this.boucle, 8000);
       this.listPages[0].status = false;
     }
 
     newFlux = () => {
-      console.log(this.oldIndex);
-      if(this.oldIndex === 0){
+      /* if (this.oldIndex === 0) {
         this.timer.addTime(10000);
-      }
+      } */
       this.listPages[0].status = true;
     }
   }

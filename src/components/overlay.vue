@@ -10,12 +10,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from "vue";
+
 import imgUrl from "@/data/data";
 
 import Sponsors from "./infosFestival/sponsorsWrapper.vue";
 
-export default {
+export default defineComponent({
   name: "Overlay",
   components: {
     Sponsors,
@@ -28,22 +30,9 @@ export default {
   data() {
     return {
       baseLinkUrl: imgUrl,
-      indexSponsor: 0,
     };
-  },
-  methods: {
-    changeIndex() {
-      this.indexSponsor < this.festSponsors.length - 1
-        ? this.indexSponsor++
-        : (this.indexSponsor = 0);
-
-      setTimeout(this.changeIndex, 5000);
-    },
-  },
-  mounted() {
-    setTimeout(this.changeIndex, 5000);
-  },
-};
+  }
+});
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

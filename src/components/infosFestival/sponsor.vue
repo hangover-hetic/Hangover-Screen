@@ -5,10 +5,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import imgUrl from "@/data/data";
 
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
   name: "Sponsor",
   props: {
     name: {
@@ -25,7 +27,7 @@ export default {
       baseImgUrl: imgUrl,
     };
   },
-};
+});
 </script>
 
 <style lang="scss"></style>

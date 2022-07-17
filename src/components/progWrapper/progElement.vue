@@ -9,27 +9,28 @@
             {{ this.getDate(this.startTime) }} -
             {{ this.getDate(this.endTime) }}
           </p>
-          <p v-if="this.hourIn">Dans : {{ this.HourInDate }}</p>
-          <p v-if="this.hourLeft">Encore : {{ this.HourLeftDate }}</p>
-          <p>Scène Saint Jean</p>
+          <p v-if="this.hourIn">
+            Dans : {{ this.getTimeLeft(this.startTime) }}
+          </p>
+          <p v-if="this.hourLeft">
+            Encore : {{ this.getTimeLeft(this.endTime) }}
+          </p>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import imgUrl from "@/data/data";
 import dayjs from "dayjs";
 
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
   name: "ProgElem",
   data: () => {
     return {
-      HourInDate: "",
-      HourLeftDate: "",
-      startTimeHour: "",
-      endTimeHour: "",
       baseImgUrl: imgUrl,
     };
   },
@@ -42,35 +43,50 @@ export default {
     endTime: String,
   },
   methods: {
-    getDate(date) {
+    getDate(date: string) {
       return dayjs(date).format("HH:mm");
     },
-  },
-  mounted() {
-    if (this.hourIn) {
-      this.HourInDate = Math.floor(this.hourIn / 60) + ":" + (this.hourIn % 60);
-    }
+    getTimeLeft(date: string) {
+      var delta = dayjs(date).diff(dayjs(), "minute");
+      var hour = Math.floor(delta / 60);
+      var minute = Math.floor(delta % 60);
+      var hourString = "";
+      var minuteString = "";
 
-    if (this.hourLeft) {
-      this.HourLeftDate =
-        Math.floor(this.hourLeft / 60) + ":" + (this.hourLeft % 60);
-    }
+      if (hour < 1) {
+        hourString = "";
+      } else if (hour === 1) {
+        hourString = hour + " heure";
+      } else if (hour > 1) {
+        hourString = hour + " heures";
+      }
+
+      if (minute < 1) {
+        minuteString = "";
+      } else if (minute === 1) {
+        minuteString = minute + " minute";
+      } else if (minute > 1) {
+        minuteString = minute + " minutes";
+      }
+
+      return hourString + ' ' + minuteString;
+    },
   },
-};
+});
 </script>
 
 <style lang="scss">
 .progElem {
   flex: none;
   max-width: 100%;
-  max-height: 30%;
+  max-height: 30vh;
   display: flex;
   border-radius: 20px;
   overflow: hidden;
   background: #202020;
   backdrop-filter: blur(5px);
   padding: 5px;
-  margin: 30px 0 0 0;
+  margin: 15px 0 0 0;
   .img-wrapper {
     height: 100%;
     width: 80vw;
@@ -93,7 +109,7 @@ export default {
       bottom: 0;
       padding: 20px;
       h3 {
-        font-size: 3em;
+        font-size: 2.5em;
       }
     }
   }

@@ -4,28 +4,33 @@
     <div class="waiting-container">
       <h1>{{ festival.festName }}</h1>
       <img :src="imgBaseUrl + festival.festLogoUrl" alt="" />
-      <Sponsors :sponsors="festival.festSponsors" :number="3" />
+      <div class="sponsors-section">
+        <h3>Nos sponsors :</h3>
+        <Sponsors :sponsors="festival.festSponsors" :number="2" />
+      </div>
       <div class="date">
         <p v-html="getDate(festival.festDate.startDate)"></p>
-        <p style="margin: 0 10px 0 10px"> - </p>
+        <p style="margin: 0 10px 0 10px">-</p>
         <p v-html="getDate(festival.festDate.endDate)"></p>
       </div>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from "vue";
+
 import TransitionElem from "@/components/transitions/transitionsElem.vue";
 import imgUrl from "@/data/data";
 import Sponsors from "@/components/infosFestival/sponsorsWrapper.vue";
 
 import dayjs from "dayjs";
 
-export default {
+export default defineComponent({
   name: "WaitingScreen",
   components: {
     TransitionElem,
-    Sponsors
+    Sponsors,
   },
   data() {
     return {
@@ -36,11 +41,11 @@ export default {
     festival: Object,
   },
   methods: {
-    getDate(date) {
+    getDate(date: string) {
       return dayjs(date).format("dddd D MMMM YYYY");
     },
   },
-};
+});
 </script>
 
 <style lang="scss">
@@ -59,8 +64,11 @@ export default {
   img {
     max-width: 90vw;
   }
-  .date{
+  .date {
     display: flex;
+  }
+  h3{
+    text-align: center;
   }
 }
 </style>

@@ -1,7 +1,12 @@
 <template>
   <div id="prog">
     <TransitionElem />
-    <div class="before" v-if="showsPast.length >= 1 && showsNow.length < 1 && showsNext.length < 1">
+    <div
+      class="before"
+      v-if="
+        showsPast.length >= 1 && showsNow.length < 1 && showsNext.length < 1
+      "
+    >
       <h2>C'est fini !</h2>
       <ProgElem
         v-for="show in showsPast.slice(-3)"
@@ -28,7 +33,7 @@
     <div class="next" v-if="showsNext.length >= 1">
       <h2>A suivre</h2>
       <ProgElem
-        v-for="show in showsNext.slice(- 3 - showsNow.lenght)"
+        v-for="show in showsNext.slice(-3 - showsNow.lenght)"
         :key="show"
         :name="show.name"
         :img="show.image ? show.image.contentUrl : ''"
@@ -40,13 +45,15 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import ProgElem from "@/components/progWrapper/progElement.vue";
 import TransitionElem from "@/components/transitions/transitionsElem.vue";
 
 import dayjs from "dayjs";
 
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
   name: "Prog",
   components: {
     ProgElem,
@@ -57,33 +64,28 @@ export default {
   },
   data() {
     return {
-      showsPast: [],
-      showsNow: [],
-      showsNext: [],
+      showsPast: [] as Array<Object>,
+      showsNow: [] as Array<Object>,
+      showsNext: [] as Array<Object>,
     };
   },
   mounted() {
     const now = dayjs();
-    console.log(this.festProgs);
+    // @ts-ignore
     var progs = [...this.festProgs];
     progs.forEach((element) => {
       if (dayjs(element.endTime).isBefore(now)) {
-        console.log("fini");
         this.showsPast.push(element);
       } else if (dayjs(element.startTime).isBefore(now)) {
-        console.log("now");
         element.encore = dayjs(element.endTime).diff(now, "minute");
         this.showsNow.push(element);
       } else {
-        console.log("après");
         element.in = dayjs(element.startTime).diff(now, "minute");
         this.showsNext.push(element);
       }
     });
-
-    console.log(this.showsPast, this.showsNow, this.showsNext);
   },
-};
+});
 </script>
 
 <style lang="scss">
@@ -94,9 +96,9 @@ export default {
   align-items: center;
   flex-wrap: nowrap;
   overflow-x: hidden;
-  h2{
+  h2 {
     text-align: center;
-    font-size: 3.3em;
+    font-size: 3em;
     text-transform: uppercase;
   }
 }
